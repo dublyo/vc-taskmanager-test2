@@ -1,0 +1,47 @@
+{
+  "name": "vibecoder-template-nextjs",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "postinstall": "prisma generate"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.5.0",
+    "@prisma/client": "^7.4.2",
+    "@tanstack/react-query": "^5.90.21",
+    "@types/pg": "^8.18.0",
+    "bcryptjs": "^3.0.2",
+    "clsx": "^2.1.1",
+    "ioredis": "^5.6.1",
+    "lucide-react": "^0.577.0",
+    "next": "^16.1.6",
+    "next-auth": "^4.24.13",
+    "next-themes": "^0.4.6",
+    "pg": "^8.20.0",
+    "prisma": "^7.4.2",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "resend": "^6.9.3",
+    "sonner": "^2.0.7",
+    "stripe": "^20.4.1",
+    "tailwind-merge": "^3.3.1",
+    "uploadthing": "^7.7.4",
+    "zod": "^4.3.6"
+  },
+  "prisma": {
+    "seed": "npx tsx prisma/seed.ts"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.2.1",
+    "@types/bcryptjs": "^3.0.0",
+    "@types/node": "^22.16.0",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^4.2.1",
+    "typescript": "^5.9.3"
+  }
+}
