@@ -5,6 +5,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 // === Auth Models ===
@@ -19,52 +20,56 @@ model User {
   role          String    @default("user")
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  tasks         Task[]
+  categories    Category[]
 
   accounts Account[]
   sessions Session[]
 }
 
-model Account {
-  id                String  @id @default(cuid())
-  userId            String
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String?
-  access_token      String?
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String?
+// === Task Management Models ===
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+model Task {
+  id          String      @id @default(cuid())
+  title       String
+  description String?
+  status      TaskStatus  @default(PENDING)
+  priority    TaskPriority @default(MEDIUM)
+  dueDate     DateTime?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  categoryId  String?
+  userId      String
+  category    Category?   @relation(fields: [categoryId], references: [id])
+  user        User        @relation(fields: [userId], references: [id])
 
-  @@unique([provider, providerAccountId])
+  @@index([status])
+  @@index([priority])
+  @@index([dueDate])
 }
 
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
+model Category {
+  id      String   @id @default(cuid())
+  name    String
+  color   String
+  tasks   Task[]
+  userId  String
+  user    User     @relation(fields: [userId], references: [id])
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([name, userId])
 }
 
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
+enum TaskStatus {
+  PENDING
+  IN_PROGRESS
+  DONE
 }
 
-model PasswordResetToken {
-  id        String   @id @default(cuid())
-  email     String
-  token     String   @unique
-  expires   DateTime
-  createdAt DateTime @default(now())
-
-  @@unique([email, token])
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
 }
+
+// ... (rest of existing schema remains unchanged)
