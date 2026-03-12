@@ -1,62 +1,29 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../node_modules/.prisma/client"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
-
-// === Auth Models ===
-
-model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String    @unique
-  emailVerified DateTime?
-  image         String?
-  password      String?
-  role          String    @default("user")
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  tasks         Task[]
-  categories    Category[]
-
-  accounts Account[]
-  sessions Session[]
-}
-
-// === Task Management Models ===
 
 model Task {
-  id          String      @id @default(cuid())
+  id          String   @id @default(cuid())
   title       String
   description String?
-  status      TaskStatus  @default(PENDING)
-  priority    TaskPriority @default(MEDIUM)
-  dueDate     DateTime?
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  status      TaskStatus
+  priority    TaskPriority
+  category    Category? @relation(fields: [categoryId], references: [id])
   categoryId  String?
-  userId      String
-  category    Category?   @relation(fields: [categoryId], references: [id])
-  user        User        @relation(fields: [userId], references: [id])
-
-  @@index([status])
-  @@index([priority])
-  @@index([dueDate])
+  dueDate     DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Category {
-  id      String   @id @default(cuid())
-  name    String
-  color   String
-  tasks   Task[]
-  userId  String
-  user    User     @relation(fields: [userId], references: [id])
-
-  @@unique([name, userId])
+  id    String  @id @default(cuid())
+  name  String
+  color String
+  tasks Task[]
 }
 
 enum TaskStatus {
@@ -71,5 +38,3 @@ enum TaskPriority {
   HIGH
   URGENT
 }
-
-// ... (rest of existing schema remains unchanged)
